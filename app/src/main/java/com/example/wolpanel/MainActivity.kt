@@ -4,13 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.wolpanel.ui.WolPanelScreen
 import com.example.wolpanel.ui.theme.WolPanelTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +16,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WolPanelTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val vm: WolViewModel = viewModel()
+                val devices by vm.devices.collectAsStateWithLifecycle()
+                val message by vm.message.collectAsStateWithLifecycle()
+
+                WolPanelScreen(
+                    devices = devices,
+                    message = message,
+                    onWake = vm::wake,
+                    onAdd = vm::addDevice,
+                    onUpdate = vm::updateDevice,
+                    onRemove = vm::removeDevice,
+                    onRefresh = vm::refreshAll,
+                    onMessageShown = vm::consumeMessage,
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WolPanelTheme {
-        Greeting("Android")
     }
 }
