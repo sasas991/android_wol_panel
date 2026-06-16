@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                     devices = devices,
                     message = message,
                     onWake = vm::wake,
+                    onSsh = vm::openSsh,
                     onAdd = vm::addDevice,
                     onUpdate = vm::updateDevice,
                     onRemove = vm::removeDevice,

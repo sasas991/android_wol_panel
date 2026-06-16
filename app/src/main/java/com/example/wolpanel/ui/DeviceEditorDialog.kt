@@ -38,6 +38,7 @@ fun DeviceEditorDialog(
     var broadcast by remember { mutableStateOf(initial?.broadcast ?: "255.255.255.255") }
     var port by remember { mutableStateOf((initial?.port ?: 9).toString()) }
     var pingPort by remember { mutableStateOf((initial?.pingPort ?: 0).toString()) }
+    var sshHost by remember { mutableStateOf(initial?.sshHost ?: "") }
 
     val macValid = runCatching { WakeOnLan.parseMac(mac) }.isSuccess
     val canSave = name.isNotBlank() && host.isNotBlank() && macValid
@@ -91,6 +92,13 @@ fun DeviceEditorDialog(
                         singleLine = true, modifier = Modifier.weight(1f),
                     )
                 }
+                OutlinedTextField(
+                    value = sshHost, onValueChange = { sshHost = it },
+                    label = { Text("SSH host (optional)") },
+                    placeholder = { Text("user@192.168.1.50") },
+                    supportingText = { Text("Opens Termux and runs `ssh <host>`") },
+                    singleLine = true, modifier = Modifier.fillMaxWidth(),
+                )
             }
         },
         confirmButton = {
@@ -106,6 +114,7 @@ fun DeviceEditorDialog(
                             broadcast = broadcast.trim().ifBlank { "255.255.255.255" },
                             port = port.toIntOrNull() ?: 9,
                             pingPort = pingPort.toIntOrNull() ?: 0,
+                            sshHost = sshHost.trim(),
                         )
                     )
                 },

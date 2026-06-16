@@ -35,6 +35,7 @@ class DeviceStore(context: Context) {
         put("broadcast", broadcast)
         put("port", port)
         put("pingPort", pingPort)
+        put("sshHost", sshHost)
     }
 
     private fun JSONObject.toDevice() = Device(
@@ -45,6 +46,7 @@ class DeviceStore(context: Context) {
         broadcast = optString("broadcast", "255.255.255.255"),
         port = optInt("port", 9),
         pingPort = optInt("pingPort", 0),
+        sshHost = optString("sshHost", ""),
     )
 
     private companion object {

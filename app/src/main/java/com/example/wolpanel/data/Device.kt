@@ -10,6 +10,7 @@ import java.util.UUID
  * @param broadcast broadcast address the magic packet is sent to (e.g. "192.168.1.255").
  * @param port UDP port for the magic packet (commonly 9, sometimes 7).
  * @param pingPort TCP port used to probe reachability when ICMP is unavailable (e.g. 22, 80, 3389).
+ * @param sshHost SSH target passed to `ssh` in Termux, e.g. "pi@192.168.1.50" or "myserver". Empty = SSH disabled.
  */
 data class Device(
     val id: String = UUID.randomUUID().toString(),
@@ -19,6 +20,7 @@ data class Device(
     val broadcast: String = "255.255.255.255",
     val port: Int = 9,
     val pingPort: Int = 0,
+    val sshHost: String = "",
 )
 
 /** Reachability state of a device, refreshed by the auto-check loop. */

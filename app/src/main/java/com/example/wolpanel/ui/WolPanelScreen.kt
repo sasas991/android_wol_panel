@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Power
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,6 +54,7 @@ fun WolPanelScreen(
     devices: List<DeviceUiState>,
     message: String?,
     onWake: (Device) -> Unit,
+    onSsh: (Device) -> Unit,
     onAdd: (Device) -> Unit,
     onUpdate: (Device) -> Unit,
     onRemove: (String) -> Unit,
@@ -106,6 +108,7 @@ fun WolPanelScreen(
                     DeviceCard(
                         ui = ui,
                         onWake = { onWake(ui.device) },
+                        onSsh = { onSsh(ui.device) },
                         onEdit = { editing = ui.device; showEditor = true },
                         onDelete = { onRemove(ui.device.id) },
                     )
@@ -130,6 +133,7 @@ fun WolPanelScreen(
 private fun DeviceCard(
     ui: DeviceUiState,
     onWake: () -> Unit,
+    onSsh: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
@@ -158,6 +162,11 @@ private fun DeviceCard(
                     style = MaterialTheme.typography.labelMedium,
                     color = statusColor(ui.status),
                 )
+            }
+            if (ui.device.sshHost.isNotBlank()) {
+                IconButton(onClick = onSsh) {
+                    Icon(Icons.Filled.Terminal, contentDescription = "SSH to ${ui.device.name}")
+                }
             }
             IconButton(onClick = onEdit) {
                 Icon(Icons.Filled.Edit, contentDescription = "Edit ${ui.device.name}")

@@ -8,6 +8,7 @@ import com.example.wolpanel.data.DeviceStatus
 import com.example.wolpanel.data.DeviceStore
 import com.example.wolpanel.data.DeviceUiState
 import com.example.wolpanel.net.Pinger
+import com.example.wolpanel.net.TermuxSsh
 import com.example.wolpanel.net.WakeOnLan
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -68,6 +69,22 @@ class WolViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun consumeMessage() { _message.value = null }
+
+    // --- SSH ---------------------------------------------------------------
+
+    fun openSsh(device: Device) {
+        if (device.sshHost.isBlank()) {
+            _message.value = "Set an SSH host for ${device.name} first"
+            return
+        }
+        _message.value = when (val r = TermuxSsh.open(getApplication(), device.sshHost)) {
+            is TermuxSsh.Result.CommandDispatched -> "Opening ssh ${device.sshHost} in Termux"
+            is TermuxSsh.Result.OpenedWithClipboard ->
+                "Termux opened — paste the ssh command (copied to clipboard)"
+            is TermuxSsh.Result.TermuxNotInstalled -> "Termux is not installed"
+            is TermuxSsh.Result.Failed -> "SSH launch failed: ${r.reason}"
+        }
+    }
 
     // --- Reachability auto-check ------------------------------------------
 
