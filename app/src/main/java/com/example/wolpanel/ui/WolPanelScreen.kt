@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,11 +18,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Power
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -138,46 +143,78 @@ private fun DeviceCard(
     onDelete: () -> Unit,
 ) {
     OutlinedCard(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            StatusDot(ui.status)
-            Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(
-                    ui.device.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    "${ui.device.host}  ·  ${ui.device.mac}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    statusLabel(ui.status),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = statusColor(ui.status),
-                )
-            }
-            if (ui.device.sshHost.isNotBlank()) {
-                IconButton(onClick = onSsh) {
-                    Icon(Icons.Filled.Terminal, contentDescription = "SSH to ${ui.device.name}")
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                StatusDot(ui.status)
+                Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
+                    Text(
+                        ui.device.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        statusLabel(ui.status),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = statusColor(ui.status),
+                    )
                 }
+                if (ui.device.sshHost.isNotBlank()) {
+                    IconButton(onClick = onSsh) {
+                        Icon(Icons.Filled.Terminal, contentDescription = "SSH to ${ui.device.name}")
+                    }
+                }
+                Button(onClick = onWake) {
+                    Icon(Icons.Filled.Power, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Text("Wake", modifier = Modifier.padding(start = 6.dp))
+                }
+                DeviceOverflowMenu(
+                    deviceName = ui.device.name,
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                )
             }
-            IconButton(onClick = onEdit) {
-                Icon(Icons.Filled.Edit, contentDescription = "Edit ${ui.device.name}")
-            }
-            IconButton(onClick = onDelete) {
-                Icon(Icons.Filled.Delete, contentDescription = "Delete ${ui.device.name}")
-            }
-            Button(onClick = onWake, modifier = Modifier.padding(start = 4.dp)) {
-                Icon(Icons.Filled.Power, contentDescription = null, modifier = Modifier.size(18.dp))
-                Text("Wake", modifier = Modifier.padding(start = 6.dp))
-            }
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "${ui.device.host}  ·  ${ui.device.mac}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DeviceOverflowMenu(
+    deviceName: String,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(Icons.Filled.MoreVert, contentDescription = "More options for $deviceName")
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuItem(
+                text = { Text("Change") },
+                leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null) },
+                onClick = {
+                    expanded = false
+                    onEdit()
+                },
+            )
+            DropdownMenuItem(
+                text = { Text("Delete") },
+                leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) },
+                onClick = {
+                    expanded = false
+                    onDelete()
+                },
+            )
         }
     }
 }
