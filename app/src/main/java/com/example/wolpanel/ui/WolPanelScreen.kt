@@ -1,5 +1,10 @@
 package com.example.wolpanel.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,13 +19,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Power
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -52,6 +61,8 @@ import androidx.compose.ui.unit.dp
 import com.example.wolpanel.data.Device
 import com.example.wolpanel.data.DeviceStatus
 import com.example.wolpanel.data.DeviceUiState
+import com.example.wolpanel.data.WakePhase
+import com.example.wolpanel.data.WakeSignal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -142,6 +153,7 @@ private fun DeviceCard(
     onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
+    var lastWake by remember { mutableStateOf<WakeSignal?>(null) }
     OutlinedCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row(
@@ -183,7 +195,69 @@ private fun DeviceCard(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            AnimatedVisibility(
+                visible = ui.wake != null,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically(),
+            ) {
+                // Keep showing the last signal while animating out, so it doesn't blank mid-collapse.
+                lastWake = ui.wake ?: lastWake
+                lastWake?.let {
+                    Column {
+                        Spacer(Modifier.height(10.dp))
+                        WakeBanner(it)
+                    }
+                }
+            }
         }
+    }
+}
+
+/** Inline banner reporting the progress of the latest wake: packet sent, waking, awake, or failed. */
+@Composable
+private fun WakeBanner(signal: WakeSignal) {
+    val text = when (signal.phase) {
+        WakePhase.SENDING -> "Sending magic packet…"
+        WakePhase.WAKING -> "Magic packet sent · waking…"
+        WakePhase.AWAKE -> "Awake — the wake worked"
+        WakePhase.NO_REPLY -> "Packet sent · no reply yet"
+        WakePhase.FAILED -> "Couldn't send packet: ${signal.detail}"
+    }
+    val color = when (signal.phase) {
+        WakePhase.AWAKE -> Color(0xFF2E7D32)
+        WakePhase.NO_REPLY -> Color(0xFFF9A825)
+        WakePhase.FAILED -> Color(0xFFC62828)
+        else -> MaterialTheme.colorScheme.primary
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(color.copy(alpha = 0.12f))
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        when (signal.phase) {
+            WakePhase.SENDING, WakePhase.WAKING ->
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    strokeWidth = 2.dp,
+                    color = color,
+                )
+            WakePhase.AWAKE ->
+                Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
+            WakePhase.NO_REPLY ->
+                Icon(Icons.Filled.Send, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
+            WakePhase.FAILED ->
+                Icon(Icons.Filled.ErrorOutline, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
+        }
+        Text(
+            text,
+            style = MaterialTheme.typography.labelLarge,
+            color = color,
+            modifier = Modifier.padding(start = 8.dp),
+        )
     }
 }
 

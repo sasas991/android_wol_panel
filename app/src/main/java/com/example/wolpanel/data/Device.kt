@@ -26,8 +26,28 @@ data class Device(
 /** Reachability state of a device, refreshed by the auto-check loop. */
 enum class DeviceStatus { UNKNOWN, CHECKING, ONLINE, OFFLINE }
 
+/**
+ * Progress of the most recent wake attempt, surfaced on the device card so the user
+ * can see both that the magic packet went out and whether the host actually woke.
+ *
+ * SENDING  -> building/broadcasting the magic packet
+ * WAKING   -> packet sent; polling the host, waiting for it to come online
+ * AWAKE    -> host responded after the packet — the wake worked
+ * NO_REPLY -> packet was sent but the host never came online within the wait window
+ * FAILED   -> the packet could not be sent (bad MAC, I/O error, …)
+ */
+enum class WakePhase { SENDING, WAKING, AWAKE, NO_REPLY, FAILED }
+
+/** Feedback for a single wake attempt. [at] disambiguates stale updates from newer taps. */
+data class WakeSignal(
+    val phase: WakePhase,
+    val at: Long,
+    val detail: String = "",
+)
+
 /** A device paired with its most recently observed status, as shown in the list. */
 data class DeviceUiState(
     val device: Device,
     val status: DeviceStatus = DeviceStatus.UNKNOWN,
+    val wake: WakeSignal? = null,
 )

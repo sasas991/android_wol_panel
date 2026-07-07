@@ -7,6 +7,8 @@ import com.example.wolpanel.data.Device
 import com.example.wolpanel.data.DeviceStatus
 import com.example.wolpanel.data.DeviceStore
 import com.example.wolpanel.data.DeviceUiState
+import com.example.wolpanel.data.WakePhase
+import com.example.wolpanel.data.WakeSignal
 import com.example.wolpanel.net.Pinger
 import com.example.wolpanel.net.TermuxSsh
 import com.example.wolpanel.net.WakeOnLan
@@ -56,14 +58,60 @@ class WolViewModel(app: Application) : AndroidViewModel(app) {
     // --- Wake --------------------------------------------------------------
 
     fun wake(device: Device) {
+        val startedAt = System.currentTimeMillis()
+        setWake(device.id, WakeSignal(WakePhase.SENDING, startedAt))
         viewModelScope.launch {
             val result = runCatching {
                 WakeOnLan.send(device.mac, device.broadcast, device.port)
             }
-            _message.value = if (result.isSuccess) {
-                "Magic packet sent to ${device.name}"
-            } else {
-                "Failed to wake ${device.name}: ${result.exceptionOrNull()?.message}"
+            if (result.isFailure) {
+                val reason = result.exceptionOrNull()?.message ?: "unknown error"
+                setWake(device.id, WakeSignal(WakePhase.FAILED, startedAt, reason))
+                _message.value = "Failed to wake ${device.name}: $reason"
+                clearWakeLater(device.id, startedAt)
+                return@launch
+            }
+
+            // Packet is out — tell the user, then confirm the host actually wakes.
+            setWake(device.id, WakeSignal(WakePhase.WAKING, startedAt))
+            _message.value = "Magic packet sent to ${device.name}"
+
+            val woke = awaitOnline(device)
+            val phase = if (woke) WakePhase.AWAKE else WakePhase.NO_REPLY
+            setWake(device.id, WakeSignal(phase, startedAt))
+            clearWakeLater(device.id, startedAt)
+        }
+    }
+
+    /** Polls [device] until it responds or the wait window elapses. Returns true if it came online. */
+    private suspend fun awaitOnline(device: Device): Boolean {
+        val deadline = System.currentTimeMillis() + WAKE_WAIT_MS
+        while (System.currentTimeMillis() < deadline) {
+            setStatus(listOf(device.id), DeviceStatus.CHECKING)
+            if (Pinger.isOnline(device.host, device.pingPort)) {
+                setStatus(listOf(device.id), DeviceStatus.ONLINE)
+                return true
+            }
+            setStatus(listOf(device.id), DeviceStatus.OFFLINE)
+            delay(WAKE_POLL_INTERVAL_MS)
+        }
+        return false
+    }
+
+    private fun setWake(id: String, signal: WakeSignal) {
+        _devices.update { list ->
+            list.map { if (it.device.id == id) it.copy(wake = signal) else it }
+        }
+    }
+
+    /** Clears the wake chip a little after it reaches a terminal state, unless a newer wake replaced it. */
+    private fun clearWakeLater(id: String, startedAt: Long) {
+        viewModelScope.launch {
+            delay(WAKE_CHIP_LINGER_MS)
+            _devices.update { list ->
+                list.map {
+                    if (it.device.id == id && it.wake?.at == startedAt) it.copy(wake = null) else it
+                }
             }
         }
     }
@@ -119,5 +167,8 @@ class WolViewModel(app: Application) : AndroidViewModel(app) {
 
     private companion object {
         const val AUTO_CHECK_INTERVAL_MS = 15_000L
+        const val WAKE_WAIT_MS = 90_000L
+        const val WAKE_POLL_INTERVAL_MS = 3_000L
+        const val WAKE_CHIP_LINGER_MS = 8_000L
     }
 }
