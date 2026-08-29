@@ -97,7 +97,7 @@ fun WolPanelScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Wake-on-LAN Panel") },
+                title = { Text("Wol Panel") },
                 actions = {
                     IconButton(onClick = onRefresh) {
                         Icon(Icons.Filled.Refresh, contentDescription = "Refresh status")
