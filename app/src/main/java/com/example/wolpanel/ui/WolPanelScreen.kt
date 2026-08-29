@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,6 +42,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -56,13 +58,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.wolpanel.R
 import com.example.wolpanel.data.Device
 import com.example.wolpanel.data.DeviceStatus
 import com.example.wolpanel.data.DeviceUiState
 import com.example.wolpanel.data.WakePhase
 import com.example.wolpanel.data.WakeSignal
+
+private const val GITHUB_PROFILE_URL = "https://github.com/sasas991"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,6 +108,7 @@ fun WolPanelScreen(
                 },
             )
         },
+        bottomBar = { AuthorFooter() },
         floatingActionButton = {
             FloatingActionButton(onClick = { editing = null; showEditor = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "Add device")
@@ -142,6 +150,38 @@ fun WolPanelScreen(
                 showEditor = false
             },
         )
+    }
+}
+
+/** Watermark plus a link out to the author's GitHub profile. */
+@Composable
+private fun AuthorFooter() {
+    val uriHandler = LocalUriHandler.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(horizontal = 12.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            "made by sasas991",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        // Outlined so the icon reads as a button rather than decoration.
+        OutlinedIconButton(
+            onClick = { uriHandler.openUri(GITHUB_PROFILE_URL) },
+            modifier = Modifier.padding(start = 8.dp).size(32.dp),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_github),
+                contentDescription = "Open sasas991 on GitHub",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(16.dp),
+            )
+        }
     }
 }
 
