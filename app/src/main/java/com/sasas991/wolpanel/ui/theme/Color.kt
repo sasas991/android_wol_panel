@@ -1,4 +1,4 @@
-package com.example.wolpanel.ui.theme
+package com.sasas991.wolpanel.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

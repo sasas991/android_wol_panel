@@ -1,0 +1,3 @@
+* New app icon
+* "made by sasas991" credit with a link to the author's GitHub profile
+* Application ID is now com.sasas991.wolpanel

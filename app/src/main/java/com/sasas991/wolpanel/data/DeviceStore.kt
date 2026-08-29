@@ -1,4 +1,4 @@
-package com.example.wolpanel.data
+package com.sasas991.wolpanel.data
 
 import android.content.Context
 import org.json.JSONArray

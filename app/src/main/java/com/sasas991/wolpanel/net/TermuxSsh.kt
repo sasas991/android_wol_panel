@@ -1,4 +1,4 @@
-package com.example.wolpanel.net
+package com.sasas991.wolpanel.net
 
 import android.content.ActivityNotFoundException
 import android.content.ClipData

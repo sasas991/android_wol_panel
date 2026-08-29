@@ -1,4 +1,4 @@
-package com.example.wolpanel
+package com.sasas991.wolpanel
 
 import org.junit.Test
 

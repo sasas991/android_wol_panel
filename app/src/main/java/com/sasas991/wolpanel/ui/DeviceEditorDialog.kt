@@ -1,4 +1,4 @@
-package com.example.wolpanel.ui
+package com.sasas991.wolpanel.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,8 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.wolpanel.data.Device
-import com.example.wolpanel.net.WakeOnLan
+import com.sasas991.wolpanel.data.Device
+import com.sasas991.wolpanel.net.WakeOnLan
 
 /**
  * Dialog to add a new device ([initial] == null) or edit an existing one.

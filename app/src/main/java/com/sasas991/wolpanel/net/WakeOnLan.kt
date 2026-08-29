@@ -1,4 +1,4 @@
-package com.example.wolpanel.net
+package com.sasas991.wolpanel.net
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

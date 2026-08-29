@@ -1,17 +1,17 @@
-package com.example.wolpanel
+package com.sasas991.wolpanel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.wolpanel.data.Device
-import com.example.wolpanel.data.DeviceStatus
-import com.example.wolpanel.data.DeviceStore
-import com.example.wolpanel.data.DeviceUiState
-import com.example.wolpanel.data.WakePhase
-import com.example.wolpanel.data.WakeSignal
-import com.example.wolpanel.net.Pinger
-import com.example.wolpanel.net.TermuxSsh
-import com.example.wolpanel.net.WakeOnLan
+import com.sasas991.wolpanel.data.Device
+import com.sasas991.wolpanel.data.DeviceStatus
+import com.sasas991.wolpanel.data.DeviceStore
+import com.sasas991.wolpanel.data.DeviceUiState
+import com.sasas991.wolpanel.data.WakePhase
+import com.sasas991.wolpanel.data.WakeSignal
+import com.sasas991.wolpanel.net.Pinger
+import com.sasas991.wolpanel.net.TermuxSsh
+import com.sasas991.wolpanel.net.WakeOnLan
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

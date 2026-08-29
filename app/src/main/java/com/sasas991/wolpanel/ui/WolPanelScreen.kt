@@ -1,4 +1,4 @@
-package com.example.wolpanel.ui
+package com.sasas991.wolpanel.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -62,12 +62,12 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.wolpanel.R
-import com.example.wolpanel.data.Device
-import com.example.wolpanel.data.DeviceStatus
-import com.example.wolpanel.data.DeviceUiState
-import com.example.wolpanel.data.WakePhase
-import com.example.wolpanel.data.WakeSignal
+import com.sasas991.wolpanel.R
+import com.sasas991.wolpanel.data.Device
+import com.sasas991.wolpanel.data.DeviceStatus
+import com.sasas991.wolpanel.data.DeviceUiState
+import com.sasas991.wolpanel.data.WakePhase
+import com.sasas991.wolpanel.data.WakeSignal
 
 private const val GITHUB_PROFILE_URL = "https://github.com/sasas991"
 

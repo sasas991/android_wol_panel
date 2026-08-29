@@ -1,4 +1,4 @@
-package com.example.wolpanel.data
+package com.sasas991.wolpanel.data
 
 import java.util.UUID
 

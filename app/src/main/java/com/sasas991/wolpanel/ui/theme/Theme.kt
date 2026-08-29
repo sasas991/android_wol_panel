@@ -1,4 +1,4 @@
-package com.example.wolpanel.ui.theme
+package com.sasas991.wolpanel.ui.theme
 
 import android.app.Activity
 import android.os.Build

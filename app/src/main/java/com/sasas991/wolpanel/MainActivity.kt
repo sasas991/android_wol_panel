@@ -1,4 +1,4 @@
-package com.example.wolpanel
+package com.sasas991.wolpanel
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.wolpanel.ui.WolPanelScreen
-import com.example.wolpanel.ui.theme.WolPanelTheme
+import com.sasas991.wolpanel.ui.WolPanelScreen
+import com.sasas991.wolpanel.ui.theme.WolPanelTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,0 +1,20 @@
+Wol Panel is a small, no-frills Wake-on-LAN client. Keep a list of the machines
+on your network and wake any of them with one tap.
+
+Features:
+
+* Device list saved across restarts, no account and no cloud
+* Wake button sends a Wake-on-LAN magic packet to the device's broadcast address
+* Live online/offline status per device, refreshed every 15 seconds or on demand
+* Inline feedback for every wake: packet sent, waking, awake, or failed
+* Optional SSH shortcut that hands the connection to Termux
+
+Everything happens on your local network. The app talks to nothing but the
+devices you enter yourself: no analytics, no tracking, no ads, no remote server.
+
+To add a device you need its MAC address, its host or IP for the status check,
+the broadcast address of your subnet, the Wake-on-LAN port (usually 9), and a
+TCP port that is open when the machine is up (22, 80 and 3389 all work well).
+
+Wake-on-LAN must be enabled in the target machine's BIOS/UEFI and network
+adapter settings, and the phone must be on the same subnet.

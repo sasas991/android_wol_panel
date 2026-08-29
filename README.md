@@ -38,3 +38,32 @@ Open in Android Studio and press Run, or:
 ```
 
 The APK is written to `app/build/outputs/apk/debug/`.
+
+For a release build:
+
+```
+./gradlew :app:assembleRelease
+```
+
+This produces `app/build/outputs/apk/release/app-release-unsigned.apk`. The APK
+is deliberately left unsigned — F-Droid builds from source and signs with its
+own key.
+
+## Privacy
+
+The app has no server side. It only talks to the devices you enter yourself, on
+your own network: a UDP magic packet to wake them and a TCP connect to check
+whether they are up. No analytics, no tracking, no ads, no proprietary
+dependencies — everything it links against is Apache-2.0 licensed AndroidX,
+Compose and Kotlin.
+
+## F-Droid
+
+Store listing text, icon and screenshots live in
+`fastlane/metadata/android/en-US/`. The build recipe to submit to
+[fdroiddata](https://gitlab.com/fdroid/fdroiddata) is in
+`fdroid/com.sasas991.wolpanel.yml`.
+
+## License
+
+[GPL-3.0](LICENSE)
