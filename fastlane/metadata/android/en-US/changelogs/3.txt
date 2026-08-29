@@ -1,3 +1,5 @@
 * New app icon
 * "made by sasas991" credit with a link to the author's GitHub profile
 * Application ID is now com.sasas991.wolpanel
+* Much smaller download: the release build is shrunk with R8 and no longer
+  bundles the full Material icon set

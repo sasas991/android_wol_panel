@@ -25,11 +25,11 @@ android {
 
     buildTypes {
         release {
-            // R8 stays off: AGP 9 only enables it behind the experimental
-            // android.r8.gradual.support flag, which is not something to ship a
-            // reproducible F-Droid build on. Unshrunk output is also easier to verify.
+            // Shrink with R8. Without it the APK is ~8 MB of unreachable Compose and
+            // AndroidX; with it, ~1.4 MB. AGP 9 gates this behind the experimental
+            // android.r8.gradual.support flag set in gradle.properties.
             optimization {
-                enable = false
+                enable = true
             }
             // No signingConfig: F-Droid builds from source and signs with its own key.
         }
@@ -53,7 +53,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.compose.ui)

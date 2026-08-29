@@ -22,16 +22,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Power
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -216,11 +213,18 @@ private fun DeviceCard(
                 }
                 if (ui.device.sshHost.isNotBlank()) {
                     IconButton(onClick = onSsh) {
-                        Icon(Icons.Filled.Terminal, contentDescription = "SSH to ${ui.device.name}")
+                        Icon(
+                            painter = painterResource(R.drawable.ic_terminal),
+                            contentDescription = "SSH to ${ui.device.name}",
+                        )
                     }
                 }
                 Button(onClick = onWake) {
-                    Icon(Icons.Filled.Power, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(
+                        painter = painterResource(R.drawable.ic_power),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
                     Text("Wake", modifier = Modifier.padding(start = 6.dp))
                 }
                 DeviceOverflowMenu(
@@ -288,9 +292,14 @@ private fun WakeBanner(signal: WakeSignal) {
             WakePhase.AWAKE ->
                 Icon(Icons.Filled.CheckCircle, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
             WakePhase.NO_REPLY ->
-                Icon(Icons.Filled.Send, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
             WakePhase.FAILED ->
-                Icon(Icons.Filled.ErrorOutline, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
+                Icon(
+                    painter = painterResource(R.drawable.ic_error_outline),
+                    contentDescription = null,
+                    tint = color,
+                    modifier = Modifier.size(18.dp),
+                )
         }
         Text(
             text,
