@@ -7,6 +7,7 @@ A simple Wake-on-LAN panel for Android. Manage your machines and wake them over 
     <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="125">
   </a>
 </p>
+
 ## Screenshots
 <table>
   <tr>
