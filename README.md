@@ -2,7 +2,11 @@
 
 
 A simple Wake-on-LAN panel for Android. Manage your machines and wake them over your LAN.
-
+ <p align="left">
+  <a href="https://f-droid.org/en/packages/com.sasas991.wolpanel/">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="125">
+  </a>
+</p>
 ## Screenshots
 <table>
   <tr>
@@ -46,7 +50,7 @@ For a release build:
 ```
 
 This produces `app/build/outputs/apk/release/app-release-unsigned.apk`. The APK
-is deliberately left unsigned — F-Droid builds from source and signs with its
+is deliberately left unsigned - F-Droid builds from source and signs with its
 own key.
 
 ## Privacy
@@ -54,7 +58,7 @@ own key.
 The app has no server side. It only talks to the devices you enter yourself, on
 your own network: a UDP magic packet to wake them and a TCP connect to check
 whether they are up. No analytics, no tracking, no ads, no proprietary
-dependencies — everything it links against is Apache-2.0 licensed AndroidX,
+dependencies - everything it links against is Apache-2.0 licensed AndroidX,
 Compose and Kotlin.
 
 ## F-Droid
